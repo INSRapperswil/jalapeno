@@ -1,0 +1,45 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: telegraf-vrf-lldp-config
+  namespace: jalapeno-collectors
+  selfLink: /api/v1/namespaces/jalapeno/configmaps/telegraf-vrf-lldp-config
+data:
+  telegraf.conf: |
+    [agent]
+      interval = "10s"
+      round_interval = true
+      metric_buffer_limit = 10000
+      flush_buffer_when_full = true
+      collection_jitter = "0s"
+      flush_interval = "10s"
+      flush_jitter = "0s"
+      debug = false
+      quiet = false
+      hostname = "telegraf-edt"
+    [[inputs.cisco_telemetry_mdt]]
+      transport = "grpc"
+      service_address = ":57400"
+      embedded_tags = ["ietf-interfaces:interfaces-state/interface/statistics"]
+      [inputs.cisco_telemetry_mdt.aliases]
+        ifstats = "ietf-interfaces:interfaces-state/interface/statistics"
+        lldp = "openconfig-lldp:lldp/interfaces/interface"
+        vrf = "Cisco-IOS-XR-mpls-vpn-oper:l3vpn/vrfs/vrf"
+
+
+    [[outputs.kafka]]
+      brokers = ["broker.jalapeno.svc:9092"]
+      topic = "jalapeno.telemetry_lldp"
+      data_format = "json"
+      namepass = ["lldp"]
+
+    [[outputs.kafka]]
+      brokers = ["broker.jalapeno.svc:9092"]
+      topic = "jalapeno.telemetry_vrf"
+      data_format = "json"
+      namedrop = ["vrf"]
+
+      [[outputs.kafka]]
+      brokers = ["broker.jalapeno.svc:9092"]
+      topic = "jalapeno.telemetry"
+      namedrop = ["vrf","lldp"]

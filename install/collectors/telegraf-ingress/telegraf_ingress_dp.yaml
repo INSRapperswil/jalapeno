@@ -20,7 +20,7 @@ spec:
           image: telegraf:1.15-alpine
           volumeMounts:
             - mountPath: /etc/telegraf/telegraf.conf
-              name: telegraf-ingress-config
+              name: telegraf-vrf-lldp-config
               subPath: telegraf.conf
               readOnly: true
       imagePullSecrets:
