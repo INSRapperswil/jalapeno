@@ -21,6 +21,19 @@ func NewProcessor(topic string, collectionName string, arangoConn *arango.Arango
 	}
 }
 
+func (p *Processor) ProcessOne() {
+	go func() {
+
+		defer func() {
+			kafka.CloseConsumer(p.TopicConsumer)
+		}()
+
+		msg := <-p.TopicConsumer.Messages()
+		// TODO: create document from message and add it to collection
+		fmt.Println(string(msg.Value))
+	}()
+}
+
 func (p *Processor) StartProcessing() {
 	go func() {
 		defer func() {
@@ -30,6 +43,9 @@ func (p *Processor) StartProcessing() {
 		for {
 			msg := <-p.TopicConsumer.Messages()
 			// TODO: create document from message and add it to collection
+
+			// create hash of message -> check if in arango, if yes -> ignore - nothing changed
+			// if hash not in arango - need to updae old document or update - how to figure out which document?
 			fmt.Println(string(msg.Value))
 		}
 	}()

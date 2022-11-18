@@ -7,9 +7,6 @@ import (
 	"github.com/Shopify/sarama"
 )
 
-const VRF_KAFKA_TOPIC = "jalapeno.telemetry.vrf"
-const LLDP_KAFKA_TOPIC = "jalapeno.telemetry.lldp"
-
 func NewSaramaConsumer(brokerAddresses []string) sarama.Consumer {
 	sarama.Logger = log.New(os.Stdout, "[sarama]", log.LstdFlags)
 	consumer, err := sarama.NewConsumer(brokerAddresses, sarama.NewConfig())

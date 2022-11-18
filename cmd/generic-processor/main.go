@@ -11,12 +11,12 @@ import (
 
 func main() {
 	// TODO: read from env variable
-	kafkaConnection := []string{""}
+	kafkaConnection := []string{"kafka.jalapeno.svc.cluster.local:9092"}
 
 	// TODO: create map from env variables
 	topicToCollection := map[string]string{
-		"jalapeno.telemetry.vrf":  "telemetry_vrf",
-		"jalapeno.telemetry.lldp": "telemetry_lldp",
+		"jalapeno.telemetry_vrf":  "telemetry_vrf",
+		"jalapeno.telemetry_lldp": "telemetry_lldp",
 	}
 
 	// create arango config
